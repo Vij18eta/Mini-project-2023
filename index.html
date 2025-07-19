@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Currency Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+      font-family: 'Ubuntu', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header {
+      text-align: center;
+      color: rgb(171, 246, 59);
+      font-size: 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 3rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .converter-box {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgb(206, 245, 106);
+      min-width: 320px;
+    }
+
+    .converter-box input,
+    .converter-box select,
+    .converter-box button {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .converter-box button {
+      background-color: rgb(255, 222, 124);
+      color: #000;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: rgb(215, 250, 77);
+    }
+
+    .popular-box {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgb(91, 102, 24);
+      color: #ffdf00;
+      min-width: 250px;
+    }
+
+    .popular-box h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .popular-box strong {
+      color: #fff200;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    🌍 Currency<br />Converter
+  </div>
+
+  <div class="main-container">
+    <div class="popular-box">
+      <h2>💵 Popular Currencies</h2>
+      <p><strong>USD</strong> – United States Dollar <small>us</small></p>
+      <p><strong>EUR</strong> – Euro <small>eu</small></p>
+      <p><strong>INR</strong> – Indian Rupee <small>in</small></p>
+      <p><strong>GBP</strong> – British Pound <small>gb</small></p>
+      <p><strong>JPY</strong> – Japanese Yen <small>jp</small></p>
+      <p><strong>AUD</strong> – Australian Dollar <small>au</small></p>
+      <p><strong>CAD</strong> – Canadian Dollar <small>ca</small></p>
+      <p><strong>CNY</strong> – Chinese Yuan <small>cn</small></p>
+      <p><strong>ZAR</strong> – South African Rand <small>za</small></p>
+    </div>
+
+    <div class="converter-box">
+      <input type="number" id="amount" placeholder="Enter amount" value="1.0" />
+      <input type="text" id="from" placeholder="From currency (e.g., USD)" value="USD" />
+      <input type="text" id="to" placeholder="To currency (e.g., INR)" value="INR" />
+      <button onclick="convertCurrency()">Convert</button>
+      <div class="result" id="result">1.0 USD = 86.17 INR</div>
+    </div>
+  </div>
+
+  <script>
+    async function convertCurrency() {
+      const amount = document.getElementById('amount').value;
+      const from = document.getElementById('from').value.toUpperCase();
+      const to = document.getElementById('to').value.toUpperCase();
+      const resultBox = document.getElementById('result');
+
+      try {
+        const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
+        const data = await res.json();
+        const rate = data.rates[to];
+        const converted = (amount * rate).toFixed(2);
+        resultBox.innerText = `${amount} ${from} = ${converted} ${to}`;
+      } catch (error) {
+        resultBox.innerText = 'Error fetching exchange rate.';
+      }
+    }
+  </script>
+</body>
+
+</html>
